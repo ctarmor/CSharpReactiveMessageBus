@@ -69,6 +69,7 @@
     <Compile Include="RxMemoryBusFastSubjectTests.cs" />
     <Compile Include="RxMemoryBusSubjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RxTimersetTimerOnceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

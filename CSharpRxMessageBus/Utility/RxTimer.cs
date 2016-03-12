@@ -6,6 +6,44 @@ namespace CSharpRxMessageBus.Utility
     public class RxTimer
     {
         /// <summary>
+        /// Set a timer using Rx Observable. runs only one time.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="tm">TimeSpan to repeat timer actio</param>
+        /// <param name="immediatte">True if it is to Call the action immediatly before setting the timer</param>
+        /// <param name="action">Action to call when timer triggers</param>
+        /// <param name="onError">Called when there is an exception.  The timer still be enabled even when there is an exception.</param>
+        /// <returns>Dispose the returnign object to stop the timer</returns>
+        public virtual IDisposable SetTimerOnce(string tag, TimeSpan tm, Action action, bool immediatte = false, Action<Exception, string> onError = null)
+        {
+            var ot = Observable.Timer(tm, tm);
+
+            var taction = new Action(() =>
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    onError?.Invoke(ex, tag);
+                }
+            });
+
+            if (immediatte)
+                taction();
+
+            IDisposable timer = null;
+            timer = ot.Subscribe(t =>
+            {
+                timer.Dispose();
+                taction();
+            });
+
+            return timer;
+        }
+
+        /// <summary>
         /// Set a timer using Rx Observable.
         /// </summary>
         /// <typeparam name="T"></typeparam>
