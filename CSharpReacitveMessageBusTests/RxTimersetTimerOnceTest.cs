@@ -15,7 +15,7 @@ namespace CSharpReacitveMessageBusTests
             var ev = new ManualResetEvent(false);
 
             new RxTimer()
-                .SetTimerOnce("t", TimeSpan.FromMilliseconds(500), () => times++);
+                .SetTimerOnce(() => "t", TimeSpan.FromMilliseconds(500), () => times++);
 
             ev.WaitOne(2000);
 
