@@ -14,10 +14,12 @@ namespace CSharpReacitveMessageBusTests
             var times = 0;
             var ev = new ManualResetEvent(false);
 
-            new RxTimer()
+            var timer = new RxTimer()
                 .SetTimerOnce(() => "t", TimeSpan.FromMilliseconds(500), () => times++);
 
             ev.WaitOne(2000);
+
+            timer.Unsubscribe();
 
             Assert.AreEqual(1, times);
         }

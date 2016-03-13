@@ -43,6 +43,7 @@
     <Compile Include="RxFastSubject.cs" />
     <Compile Include="RxMemoryBus.cs" />
     <Compile Include="RxMemoryBusFast.cs" />
+    <Compile Include="RxTimerDisposible.cs" />
     <Compile Include="Utility\DisposableSubscription.cs" />
     <Compile Include="Utility\LockingDictionary.cs" />
     <Compile Include="Utility\RxTimer.cs" />

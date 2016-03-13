@@ -10,11 +10,11 @@ namespace CSharpRxMessageBus.Utility
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="tm">TimeSpan to repeat timer actio</param>
-        /// <param name="immediatte">True if it is to Call the action immediatly before setting the timer</param>
         /// <param name="action">Action to call when timer triggers</param>
+        /// <param name="immediatte">True if it is to Call the action immediatly before setting the timer</param>
         /// <param name="onError">Called when there is an exception.  The timer still be enabled even when there is an exception.</param>
         /// <returns>Dispose the returnign object to stop the timer</returns>
-        public virtual IDisposable SetTimerOnce(Func<string> tag, TimeSpan tm, Action action, bool immediatte = false, Action<Exception, string> onError = null)
+        public virtual RxTimerDisposible SetTimerOnce(Func<string> tag, TimeSpan tm, Action action, bool immediatte = false, Action<Exception, string> onError = null)
         {
             var ot = Observable.Timer(tm, tm);
 
@@ -33,12 +33,14 @@ namespace CSharpRxMessageBus.Utility
             if (immediatte)
                 taction();
 
-            IDisposable timer = null;
-            timer = ot.Subscribe(t =>
+            var timer = new RxTimerDisposible();
+
+            timer.Set(ot.Subscribe(t =>
             {
-                timer.Dispose();
+                var rxtm = timer;
                 taction();
-            });
+                rxtm.Unsubscribe();
+            }));
 
             return timer;
         }
